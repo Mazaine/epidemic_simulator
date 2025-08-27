@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epidemic Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Epidemic Simulator</h1>
+            <p class="text-gray-600">Visualize how diseases spread through a population</p>
+        </header>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Control Panel -->
+            <div class="lg:col-span-1 bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Simulation Controls</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Population Size</label>
+                        <input type="range" id="population-size" min="10" max="500" value="200" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>10</span>
+                            <span id="population-value">200</span>
+                            <span>500</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Infected</label>
+                        <input type="range" id="initial-infected" min="1" max="50" value="5" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>1</span>
+                            <span id="initial-infected-value">5</span>
+                            <span>50</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Infection Rate (%)</label>
+                        <input type="range" id="infection-rate" min="1" max="100" value="30" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>1%</span>
+                            <span id="infection-rate-value">30%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Recovery Time (days)</label>
+                        <input type="range" id="recovery-time" min="1" max="30" value="14" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>1</span>
+                            <span id="recovery-time-value">14</span>
+                            <span>30</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mortality Rate (%)</label>
+                        <input type="range" id="mortality-rate" min="0" max="50" value="2" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>0%</span>
+                            <span id="mortality-rate-value">2%</span>
+                            <span>50%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <button id="start-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition">
+                            <i class="fas fa-play mr-2"></i> Start Simulation
+                        </button>
+                        <button id="reset-btn" class="w-full mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition">
+                            <i class="fas fa-redo mr-2"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Simulation Area -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Simulation</h2>
+                        <div class="text-sm text-gray-600">
+                            Day: <span id="day-counter">0</span>
+                        </div>
+                    </div>
+                    
+                    <div id="simulation-area" class="w-full h-64 md:h-96 rounded-md overflow-hidden"></div>
+                    
+                    <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
+                        <div class="bg-green-50 p-2 rounded">
+                            <div class="text-green-600 font-medium" id="healthy-count">0</div>
+                            <div class="text-xs text-green-800">Healthy</div>
+                        </div>
+                        <div class="bg-red-50 p-2 rounded">
+                            <div class="text-red-600 font-medium" id="infected-count">0</div>
+                            <div class="text-xs text-red-800">Infected</div>
+                        </div>
+                        <div class="bg-blue-50 p-2 rounded">
+                            <div class="text-blue-600 font-medium" id="recovered-count">0</div>
+                            <div class="text-xs text-blue-800">Recovered</div>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded">
+                            <div class="text-gray-600 font-medium" id="deceased-count">0</div>
+                            <div class="text-xs text-gray-800">Deceased</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Statistics</h2>
+                    <div class="chart-container">
+                        <canvas id="epidemic-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>

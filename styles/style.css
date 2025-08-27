@@ -1,0 +1,30 @@
+.person {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+            transition: all 0.5s ease;
+        }
+        
+        .healthy { background-color: #4ade80; }
+        .infected { background-color: #f87171; }
+        .recovered { background-color: #60a5fa; }
+        .deceased { background-color: #6b7280; }
+        
+        #simulation-area {
+            position: relative;
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .control-panel {
+                flex-direction: column;
+            }
+        }
